@@ -4,7 +4,6 @@ import { AppContext } from '../../App';
 import jwt_decode from 'jwt-decode'
 import Loading from './Loading';
 import axios from 'axios'
-import './TaskList.css'
 const TaskList = (props) => {
     const { accessToken } = useContext(AppContext)
     const [isLoading, setIsLoading] = useState(false);

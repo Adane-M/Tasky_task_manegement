@@ -1,0 +1,38 @@
+.wrap {
+    /* font-family: "sofia", sans-serif; */
+    text-align: center;
+    text-shadow: 3px 3px 3px #ababab;
+}
+.container {
+    display: flex;
+}
+.chart{
+    display: flex;
+    margin: 0%;
+    justify-content: space-evenly;
+}
+.board{
+    width: 70%;
+    margin: auto;
+}
+.delete {
+    border:none;
+    background: transparent;
+}
+.delete:hover {
+    color: red;
+    transform: scale(1.2);
+}
+.complete {
+    text-decoration: line-through;
+    color: red;
+}
+.col-3 > :first-child:hover {
+    border: red;
+}
+.col-2 :first-child:hover {
+    border-color: rgb(21, 147, 7);
+}
+.col-7 {
+    cursor: pointer;
+}

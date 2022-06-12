@@ -1,60 +1,45 @@
+import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 const Task = (props) => {
     const [task, setTask] = useState('')
-    const[userid , setUserid] = useState('')
-    const[taskid , setTaskid] = useState('')
     const params = useParams();
     const navigate = useNavigate();
+    const { userid, taskid } = params
 
     useEffect(() => {
         const getTask = async () => {
             try {
-                console.log(params.id);
-                // let num = isNaN(params.id) ? 1 : params.id;
-                // console.log(num);
-                const res = await fetch(`/task/2/${params.id}`)
-                const data = await res.json();
-                console.log(data);
-                setTask(data[0]);
-                setTaskid(data[0].task_id)
-                setUserid(data[0].user_id)
+                const res = await axios.get(`/tasks/${userid}/${taskid}`)
+                console.log(res.data);
+                setTask(res.data[0].task_name);
             }
             catch (err) {
                 console.log('error task :', err);
             }
         }
+
         getTask();
-    }, [params.id])
+    }, [userid , taskid])
 
 
-    const updateTask = (userid,taskid) => {
-        console.log('ids',userid,taskid);
-        console.log('task',task);
-        // let updatedTask ={
-        //     task: task
-        // }
-        fetch(`http://localhost:5000/task/${userid}/${taskid}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ task })
-        })
-            .then(res => res.json())
-            .then(data => {
-                // setTask(data)
-                console.log(data);
-
+    const updateTask = async () => {
+        const val = document.getElementById('inpval').value;
+        setTask(val)
+        try {
+            let res = await axios.put(`/tasks/update/${userid}/${taskid}`, {
+                task
             })
-            .catch(err => {
-                console.log(err);
-            })
+            console.log(' update TASK->', res);
+            navigate('/')
+        } catch (e) {
+            console.log(e);
+        }
     }
 
-    const delTask = (userid ,taskid) => {
-        fetch(`task/${userid}/${taskid}`, {
+    const delTask = () => {
+        fetch(`/tasks/${userid}/${taskid}`, {
             method: 'DELETE'
         })
             .then(res => res.json())
@@ -63,7 +48,6 @@ const Task = (props) => {
                 navigate('/')
             })
             .catch(err => console.log('error :', err))
-        navigate('/login');
     }
 
     return (
@@ -76,13 +60,13 @@ const Task = (props) => {
                     <div className="d-flex justify-content-center align-items-center h-100">
                         <div className="text-white">
                             <div>
-                                <h2>Update task</h2>
+                                <h2>Update task {task}</h2>
                                 {/* <form onSubmit={updateTask} > */}
-                                    Task:<input type='text' onChange={(e) => setTask(e.currentTarget.value)} value={task.task_name} /><br />
-                                    {/* <input type='submit' value='Update' /> */}
+                                Task:<input type='text' id='inpval' onChange={(e) => setTask(e.target.value)} value={task} /><br />
+                                {/* <input type='submit' value='Update' /> */}
                                 {/* </form> */}
-                                <button onClick={()=>updateTask(userid,taskid)}>Update</button>
-                                <button onClick={()=>delTask(userid,taskid)}>delete</button>
+                                <button onClick={updateTask}>Update</button>
+                                <button onClick={delTask}>delete</button>
                             </div>
                         </div>
                     </div>

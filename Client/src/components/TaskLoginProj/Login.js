@@ -13,7 +13,7 @@ const Login = (props) => {
     const handleAction = async (e) => {
         e.preventDefault();
         try {
-            let response = await axios.post('http://localhost:5000/users/login', {
+            let response = await axios.post('/users/login', {
                 email, passw
             }, {
                 withCredentials: true,
@@ -22,7 +22,7 @@ const Login = (props) => {
                     'Content-Type': 'application/json'
                 }
             })
-            console.log('login response', response.data);
+            console.log('login response', response.data.accessToken);
             setAccessToken(response.data.accessToken)
             navigate('/');
         } catch (e) {
@@ -48,7 +48,7 @@ const Login = (props) => {
                         <div className="row d-flex justify-content-center">
                             <div className="col-lg-8">
                                 <h2 className="fw-bold mb-5">LOG-IN</h2>
-                                <form onSubmit={handleAction}>
+                                <form onSubmit={handleAction} action="http://localhost:3000">
                                     <div className="form-outline mb-4">
                                         <input type="email" id="form3Example3" className="form-control" onChange={(e) => setEmail(e.target.value)} />
                                         <label className="form-label" htmlFor="form3Example3">Email address</label>

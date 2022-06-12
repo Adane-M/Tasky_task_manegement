@@ -3,15 +3,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const getUsers = async (req, res) => {
-    console.log(req ,res);
+    console.log(req, res);
     try {
-        // const users = await Users.findAll()
         const users = await Users.findAll({
-            // attributes:['users.createdAt','users.updatedAt']
-            attributes: ['id', 'fname', 'lname', 'email', 'passw']
+            attributes: ['id', 'fname', 'lname', 'email']
         });
         res.json(users);
-        console.log('get users success', users);
+        console.table('get users success', users);
     } catch (e) {
         console.log('get users error*/*/*/*==', e);
         res.json({ msg: 'user not found' })
@@ -21,7 +19,7 @@ const getUsers = async (req, res) => {
 }
 
 const register = async (req, res) => {
-    console.log('---reg req--------', req.body);
+    // console.log('---reg req--------', req.body);
     const { fname, lname, email, passw } = req.body;
 
     if (!(fname && lname && email && passw)) {
@@ -53,24 +51,25 @@ const login = async (req, res) => {
             }
         });
         const match = await bcrypt.compare(passw, user[0].dataValues.passw);
-
+        console.log("match--controler", match);
         if (!match) {
             return res.status(400).json({ msg: 'Wrong password' });
         }
         const userId = user[0].dataValues.id;
         const userEmail = user[0].dataValues.email;
-        const accessToken = jwt.sign({ userId, userEmail }, process.env.ACCESS_TOKEN_SECRET,{
+        //creat access-token when login success!
+        const accessToken = jwt.sign({ userId, userEmail }, process.env.ACCESS_TOKEN_SECRET, {
             expiresIn: '1500s'
         });
-        // console.log('accessToken',accessToken);
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
-            maxAge: 60*1000
+            maxAge: 60 * 1000
         });
         res.json({ accessToken });
     } catch (e) {
-        res.status(404).json({ msg: 'Email not found' })
+        res.status(400).json({ msg: 'Email not found' })
     }
+
 }
 
 const logout = (req, res) => {

@@ -15,6 +15,4 @@ router.get('/token', verifyToken, (req, res) => {
     res.status(200).json({ accessToken });
 });
 
-//using "type":"module" in package.json=>no need for export.modules
-// export default router; 
 module.exports = router;

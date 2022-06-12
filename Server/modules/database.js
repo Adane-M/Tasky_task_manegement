@@ -1,31 +1,26 @@
 const taskdb = require('../connections/heroku_pg.js');
 
-const getAllTasks = (userId = 1) => {
-    console.log(userId);
+const getAllTasks = (userId) => {
     return taskdb('tasks')
         .select('task_id', 'task_name', 'complete')
         .where({ user_id: userId })
         .returning('*')
 };
 
-const getTaskById = (userid,id) => {
-    console.log(id);
-    // console.log('db : ',db);
+const getTaskById = (userid, id) => {
     return taskdb('tasks')
-        .select('task_name','task_id','complete' , 'user_id')
+        .select('task_name', 'task_id', 'complete', 'user_id')
         .where({ task_id: id })
         .andWhere({ user_id: userid })
 };
 
-const insertTask = (userId ,  task ) => {
-    console.log('database add task:', task);
+const insertTask = (userId, task) => {
     return taskdb('tasks')
-        .insert({ task_name: task ,user_id:userId})
+        .insert({ task_name: task, user_id: userId })
         .returning('*')
 };
 
-const delTask = (userid,id) => {
-    console.log('id -- db', id);
+const delTask = (userid, id) => {
     return taskdb('tasks')
         .where({ task_id: id })
         .andWhere({ user_id: userid })
@@ -33,19 +28,20 @@ const delTask = (userid,id) => {
         .returning('*')
 };
 
-const updateTask = (userid,id, { task }) => {
+const updateTask = (userid, id, { task }) => {
     return taskdb('tasks')
         .update({ task_name: task })
         .where({ task_id: id })
         .andWhere({ user_id: userid })
-    // .returning('*')
+        .returning('*')
 };
-const updateTaskcomplete = (userid,id, { complete }) => {
+const updateTaskcomplete = (userid, id, comp) => {
     return taskdb('tasks')
-        .update({ complete: complete })
+        .update({ complete: comp })
         .where({ task_id: id })
         .andWhere({ user_id: userid })
         .returning('*')
+
 };
 
 

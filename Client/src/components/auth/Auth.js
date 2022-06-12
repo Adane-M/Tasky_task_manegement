@@ -10,9 +10,9 @@ export const Auth = (props) => {
 
     useEffect(() => {
         const verify = async () => {
-            console.log('access ver:',accessToken);
+            console.log('access ver:', accessToken);
             try {
-                const response = await axios.get('http://localhost:5000/token', {
+                const response = await axios.get('/users/token', {
                     withCredentials: true,
                     headers: {
                         'Access-Control-Allow-Origin': '*',
@@ -30,9 +30,9 @@ export const Auth = (props) => {
         verify();
     }, [accessToken, navigate, setAccessToken])
 
-    console.log('redirect', redirect);
+    console.log('redirect if login true :', redirect);
     return (
-        !redirect ? props.children : null
+        (!redirect) ? null : props.children
     )
 }
 
